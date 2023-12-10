@@ -289,6 +289,39 @@ int MPI_Request_free(MPI_Request * req)
   return (MPI_SUCCESS);
 }
 
+/***********************/
+/* Cancel:  Cancels a communication request
+
+ */
+
+FC_FUNC(mpi_cancel, MPI_CANCEL)
+         (int * request, int * ierr)
+{
+  *ierr = MPI_Cancel(request);
+}
+
+int MPI_Cancel(MPI_Request * request)
+{
+  int ierr = MPI_SUCCESS;
+  Req *req;
+
+  if (*request==MPI_REQUEST_NULL)
+    {
+      return MPI_ERR_REQUEST;
+    }
+
+  req=mpi_handle_to_ptr(*request);
+
+  if (req->complete != 0)
+    {
+      ierr = MPI_ERR_ARG;
+    }
+
+  mpi_free_handle(*request);
+  *request = MPI_REQUEST_NULL;
+
+  return ierr;
+}
 
 
 /*********/

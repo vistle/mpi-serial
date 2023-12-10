@@ -379,6 +379,7 @@ extern int MPI_Waitsome(int incount, MPI_Request *array_of_requests,
                         int *outcount, int *array_of_indices,
                         MPI_Status *array_of_statuses);
 extern int MPI_Request_free(MPI_Request * req);
+extern int MPI_Cancel(MPI_Request * req);
 extern int MPI_Isend(void *buf, int count, MPI_Datatype datatype,
                      int dest, int tag, MPI_Comm comm, MPI_Request *request) ;
 extern int MPI_Send(void* buf, int count, MPI_Datatype datatype,
