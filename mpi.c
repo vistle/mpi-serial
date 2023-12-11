@@ -387,3 +387,18 @@ void *mpi_c_in_place(void *buffer)
 
   return(buffer);
 }
+
+int MPI_Alloc_mem(MPI_Aint size, MPI_Info info, void *baseptr)
+{
+    void *base = malloc(size);
+    if (base == NULL)
+        return MPI_ERR_NO_MEM;
+    *(void **)baseptr = base;
+    return MPI_SUCCESS;
+}
+
+int MPI_Free_mem(void *base)
+{
+    free(base);
+    return MPI_SUCCESS;
+}

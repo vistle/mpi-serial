@@ -46,6 +46,7 @@ typedef int MPI_Group;
 #define MPI_PENDING        (-1)
 #define MPI_ERR_IN_STATUS  (-1)
 #define MPI_ERR_LASTCODE   (-1)
+#define MPI_ERR_NO_MEM     (-1)
 
 /*
  * MPI_UNDEFINED
@@ -438,5 +439,8 @@ extern int MPI_Type_lb(MPI_Datatype datatype, MPI_Aint * lb);
 extern int MPI_Type_ub(MPI_Datatype datatype, MPI_Aint * ub);
 
 extern double MPI_Wtime(void);
+
+extern int MPI_Alloc_mem(MPI_Aint size, MPI_Info info, void *baseptr);
+extern int MPI_Free_mem(void *baseptr);
 
 #endif
