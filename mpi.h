@@ -343,6 +343,7 @@ extern MPI_Fint MPI_Group_c2f(MPI_Group group);
 
 extern int MPI_Init(int *argc, char **argv[]) ;
 extern int MPI_Finalize(void);
+extern int MPI_Finalized(int *flag);
 extern int MPI_Abort(MPI_Comm comm, int errorcode);
 extern int MPI_Error_string(int errorcode, char *string, int *resultlen);
 extern int MPI_Get_processor_name(char *name, int *resultlen);

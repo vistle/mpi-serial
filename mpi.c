@@ -5,6 +5,7 @@
 /****************************************************************************/
 
 static int initialized=0;
+static int finalized=0;
 
 
 /* Store fortran pointer values here */
@@ -185,6 +186,7 @@ int MPI_Init(int *argc, char **argv[])
   FC_FUNC(mpi_get_fort_pointers,MPI_GET_FORT_POINTERS)();  // the () are important
 
   initialized=1;
+  finalized=0;
   return(MPI_SUCCESS);
 }
 
@@ -211,6 +213,7 @@ int FC_FUNC( mpi_finalize, MPI_FINALIZE )(int *ierror)
 int MPI_Finalize(void)
 {
   initialized=0;
+  finalized=1;
 
   mpi_destroy_handles();
 
@@ -219,6 +222,13 @@ int MPI_Finalize(void)
 
 
 /*********/
+
+int MPI_Finalized( int *flag )
+{
+  *flag = finalized;
+  return(MPI_SUCCESS);
+}
+
 
 
 int FC_FUNC( mpi_abort , MPI_ABORT )(int *comm, int *errorcode, int *ierror)
