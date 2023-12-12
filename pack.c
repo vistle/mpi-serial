@@ -81,6 +81,7 @@ int FC_FUNC( mpi_pack_size, MPI_PACK_SIZE )(int * incount, int * datatype,
   return MPI_SUCCESS;
 }
 
+#if 0
 int MPI_Pack_size(int incount, MPI_Datatype datatype,
                   MPI_Comm comm, MPI_Aint * size)
 {
@@ -92,6 +93,21 @@ int MPI_Pack_size(int incount, MPI_Datatype datatype,
 
   return ret;
 }
+#else
+int MPI_Pack_size(int incount, MPI_Datatype datatype,
+                  MPI_Comm comm, int * size)
+{
+  int ret;
+  Datatype type_ptr = *(Datatype*) mpi_handle_to_datatype(datatype);
+  Comm * comm_ptr = mpi_handle_to_ptr(comm);
+  MPI_Aint sz;
+
+  ret = Pack_size(incount, type_ptr, comm_ptr, &sz);
+  *size = sz;
+
+  return ret;
+}
+#endif
 
 
 

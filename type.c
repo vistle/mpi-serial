@@ -21,7 +21,7 @@
  * _not_ prefixed with MPI_.  These functions translate the
  * handle to a pointer and call the non-MPI_ func.
  *
- * Fortran bindings use FC_FUNC, as defined in mpiP.h.
+ * Fortran bindings use void FC_FUNC, as defined in mpiP.h.
  */
 
 
@@ -519,6 +519,22 @@ int MPI_Type_create_hvector(int count, int blocklen, MPI_Aint stride,
   return Type_hvector(count, blocklen, stride, old_ptr, new_ptr);
 }
 
+int MPI_Type_create_subarray(int ndims, const int array_of_sizes[], const
+int array_of_subsizes[], const int array_of_starts[], int order, MPI_Datatype
+oldtype, MPI_Datatype *newtype)
+{
+  abort();
+  return MPI_SUCCESS;
+}
+
+int MPI_Type_create_struct(int count, int array_of_blocklengths[],
+     const MPI_Aint array_of_displacements[], const MPI_Datatype array_of_types[],
+     MPI_Datatype *newtype)
+{
+  abort();
+  return MPI_SUCCESS;
+}
+
 
 /*************************/
 /* Type_vector
@@ -770,7 +786,7 @@ int FC_FUNC( mpi_get_address, MPI_ADDRESS )(void * loc, long * address, int * ie
   return MPI_SUCCESS;
 }
 
-int MPI_Get_address(void * loc, MPI_Aint * address)
+int MPI_Get_address(const void * loc, MPI_Aint * address)
 {
     *address = (MPI_Aint) loc;
     return MPI_SUCCESS;
@@ -864,4 +880,3 @@ int Pprint_typemap(Datatype type)
   return MPI_SUCCESS;
 }
 #endif //TEST_INTERNAL
-

@@ -238,6 +238,48 @@ int MPI_Intercomm_create(MPI_Comm local_comm, int local_leader,
   return MPI_SUCCESS;
 }
 
+int MPI_Comm_test_inter(MPI_Comm comm, int *flag)
+{
+    if (comm == MPI_COMM_NULL)
+        return MPI_ERR_COMM;
+    *flag = 1;
+    return MPI_SUCCESS;
+}
+
+
+int MPI_Comm_compare( MPI_Comm comm1, MPI_Comm comm2, int *result)
+{
+    if (comm1 == comm2)
+        *result = MPI_IDENT;
+    else if (comm1 == MPI_COMM_NULL || comm2 == MPI_COMM_NULL)
+        *result = MPI_UNEQUAL;
+    else
+        *result = MPI_CONGRUENT;
+
+  return MPI_SUCCESS;
+}
+
+int MPI_Comm_get_attr(MPI_Comm comm, int comm_keyval, void *attribute_val, int *flag)
+{
+    *flag = 0;
+    if (comm == MPI_COMM_NULL)
+        return MPI_ERR_COMM;
+
+    return MPI_ERR_KEYVAL;
+}
+
+int MPI_Comm_set_errhandler(MPI_Comm comm, MPI_Errhandler errhandler)
+{
+    return MPI_SUCCESS;
+}
+
+int MPI_Topo_test(MPI_Comm comm, int *status)
+{
+    if (comm == MPI_COMM_NULL)
+        return MPI_ERR_COMM;
+    *status = MPI_UNDEFINED;
+    return MPI_SUCCESS;
+}
 
 /*********/
 

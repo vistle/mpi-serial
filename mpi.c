@@ -6,6 +6,7 @@
 
 static int initialized=0;
 static int finalized=0;
+static int thread_provided = MPI_THREAD_MULTIPLE;
 
 
 /* Store fortran pointer values here */
@@ -159,11 +160,25 @@ int FC_FUNC( mpi_init_fort , MPI_INIT_FORT)
 int MPI_Init_thread(int *argc, char **argv[], int required, int *provided)
 {
     *provided = required;
+    thread_provided = required;
     return MPI_Init(argc, argv);
 }
 
+int MPI_Query_thread(int *provided)
+{
+    *provided = thread_provided;
+    return MPI_SUCCESS;
+}
+
+int MPI_Is_thread_main(int *flag)
+{
+    return MPI_ERR_OTHER;
+}
+
+
 int MPI_Init(int *argc, char **argv[])
 {
+    fprintf(stderr, "mpi-serial: MPI_Init\n");
   MPI_Comm my_comm_world;
 
   if (sizeof(MPI_Aint) < sizeof(void *))
@@ -181,9 +196,11 @@ int MPI_Init(int *argc, char **argv[])
       abort();
     }
 
+#ifndef MPI_NO_FORTRAN
   // call this to have the fortran routine call back and save
   // values for f_MPI_STATUS_IGNORE and f_MPI_STATUSES_IGNORE
-  FC_FUNC(mpi_get_fort_pointers,MPI_GET_FORT_POINTERS)();  // the () are important
+  void FC_FUNC(mpi_get_fort_pointers,MPI_GET_FORT_POINTERS)();  // the () are important
+#endif
 
   initialized=1;
   finalized=0;
@@ -212,6 +229,7 @@ int FC_FUNC( mpi_finalize, MPI_FINALIZE )(int *ierror)
 
 int MPI_Finalize(void)
 {
+  fprintf(stderr, "MPI_Finalize\n");
   initialized=0;
   finalized=1;
 
@@ -343,7 +361,7 @@ void FC_FUNC( mpi_get_library_version, MPI_GET_LIBRARY_VERSION) (char *version, 
 
 
 
-int MPI_Get_Version(int *mpi_vers, int *mpi_subvers)
+int MPI_Get_version(int *mpi_vers, int *mpi_subvers)
 {
     *mpi_vers = 1;
     *mpi_subvers = 0;
@@ -354,7 +372,7 @@ int MPI_Get_Version(int *mpi_vers, int *mpi_subvers)
 /**********/
 void FC_FUNC( mpi_get_version, MPI_GET_VERSION )(int *mpi_vers, int *mpi_subvers, int *ierror)
 {
-  MPI_Get_Version(mpi_vers, mpi_subvers);
+  MPI_Get_version(mpi_vers, mpi_subvers);
 
   *ierror=MPI_SUCCESS;
 
@@ -400,7 +418,7 @@ void *mpi_c_in_place(void *buffer)
 
 int MPI_Alloc_mem(MPI_Aint size, MPI_Info info, void *baseptr)
 {
-    void *base = malloc(size);
+    void *base = mpi_malloc(size);
     if (base == NULL)
         return MPI_ERR_NO_MEM;
     *(void **)baseptr = base;
@@ -409,6 +427,12 @@ int MPI_Alloc_mem(MPI_Aint size, MPI_Info info, void *baseptr)
 
 int MPI_Free_mem(void *base)
 {
-    free(base);
+    mpi_free(base);
     return MPI_SUCCESS;
+}
+
+int MPI_Attr_get(MPI_Comm comm, int keyval,void *attribute_val,
+    int *flag )
+{
+    return MPI_ERR_OTHER;
 }

@@ -16,7 +16,7 @@ int FC_FUNC( mpi_get_count , MPI_GET_COUNT )
 }
 
 
-int MPI_Get_count(MPI_Status *status, MPI_Datatype datatype, int *count)
+int MPI_Get_count(const MPI_Status *status, MPI_Datatype datatype, int *count)
 {
   *count = status->get_count;
   return(MPI_SUCCESS);
@@ -34,11 +34,9 @@ int FC_FUNC( mpi_get_elements , MPI_GET_ELEMENTS )
 }
 
 
-int MPI_Get_elements(MPI_Status *status, MPI_Datatype datatype, int *count)
+int MPI_Get_elements(const MPI_Status *status, MPI_Datatype datatype, int *count)
 {
   Datatype dt_ptr = *(Datatype*)mpi_handle_to_datatype(datatype);
   *count = status->get_count * dt_ptr->count;
   return(MPI_SUCCESS);
 }
-
-

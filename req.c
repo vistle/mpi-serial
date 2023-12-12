@@ -294,7 +294,7 @@ int MPI_Request_free(MPI_Request * req)
 
  */
 
-FC_FUNC(mpi_cancel, MPI_CANCEL)
+void FC_FUNC(mpi_cancel, MPI_CANCEL)
          (int * request, int * ierr)
 {
   *ierr = MPI_Cancel(request);
@@ -321,6 +321,12 @@ int MPI_Cancel(MPI_Request * request)
   *request = MPI_REQUEST_NULL;
 
   return ierr;
+}
+
+int MPI_Test_cancelled(const MPI_Status *status, int *flag)
+{
+    *flag = 1;
+    return MPI_SUCCESS;
 }
 
 

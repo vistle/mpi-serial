@@ -36,6 +36,52 @@ int MPI_Group_incl(MPI_Group group, int n, int *ranks, MPI_Group *newgroup)
   return(MPI_SUCCESS);
 }
 
+int MPI_Group_excl(MPI_Group group, int n, const int ranks[], MPI_Group *newgroup)
+{
+  if (group==MPI_GROUP_NULL)
+    {
+      fprintf(stderr,"MPI_Group_excl: null group passed in\n");
+      abort();
+    }
+
+    if (n>1)
+      {
+	fprintf(stderr,"MPI_Group_excl: more than 1 proc in group\n");
+	abort();
+      }
+
+  if (group==MPI_GROUP_EMPTY || n==1)
+    *newgroup=MPI_GROUP_EMPTY;
+  else
+      *newgroup=MPI_GROUP_ONE;
+
+  return(MPI_SUCCESS);
+}
+
+int MPI_Group_size(MPI_Group group, int *size)
+{
+    if (group == MPI_GROUP_NULL)
+        return MPI_ERR_GROUP;
+    if (group == MPI_GROUP_EMPTY)
+        *size = 0;
+    else
+        *size = 1;
+  return(MPI_SUCCESS);
+}
+
+int MPI_Group_rank(MPI_Group group, int *rank)
+{
+    if (group == MPI_GROUP_NULL)
+        return MPI_ERR_GROUP;
+    if (group == MPI_GROUP_EMPTY)
+        *rank = MPI_UNDEFINED;
+    else
+        *rank = 0;
+  return(MPI_SUCCESS);
+}
+
+
+
 
 /*********/
 
@@ -249,6 +295,24 @@ int MPI_Group_translate_ranks(MPI_Group group1, int n, int *ranks1,
 
   return(MPI_SUCCESS);
 
+}
+
+int MPI_Group_compare(MPI_Comm group1, MPI_Comm group2, int *result)
+{
+  if (group1==MPI_GROUP_NULL || group2==MPI_GROUP_NULL)
+  {
+      fprintf(stderr,"MPI_Group_compare: null input group\n");
+      abort();
+      return MPI_ERR_GROUP;
+  }
+
+  if (group1==MPI_GROUP_EMPTY && group2==MPI_GROUP_EMPTY)
+      *result = MPI_IDENT;
+  else if (group1 != MPI_GROUP_EMPTY && group2 != MPI_GROUP_EMPTY)
+      *result = MPI_IDENT;
+  else
+      *result = MPI_UNEQUAL;
+  return MPI_SUCCESS;
 }
 
 
