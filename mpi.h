@@ -108,6 +108,8 @@ typedef int MPI_Datatype;
 #define MPI_DOUBLE          (-10)
 #define MPI_LONG_DOUBLE     (-11)
 
+#define MPI_CXX_BOOL        MPI_CHAR
+
 //Cross-language
 #define MPI_BYTE            (-12)
 #define MPI_PACKED          (-13)
