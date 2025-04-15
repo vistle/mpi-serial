@@ -424,6 +424,28 @@ int MPI_Type_struct(int count, int * blocklens, MPI_Aint * displacements,
     return retval;
 }
 
+int Type_hvector(int count, int blocklen, MPI_Aint stride,
+  Datatype oldtype, Datatype *newtype)
+{
+int *blocklengths = (int*)malloc(sizeof(int) *count);
+Datatype *oldtypes = (Datatype*)malloc(sizeof(Datatype) *count);
+MPI_Aint *offsets = (MPI_Aint*)malloc(sizeof(MPI_Aint) *count);
+MPI_Aint extent;
+
+Type_extent(oldtype, &extent);
+for (int i = 0; i < count; i++)
+{
+blocklengths[i] = blocklen;
+offsets[i] = stride * i;
+oldtypes[i] = oldtype;
+}
+int retval = Type_struct(count, blocklengths, offsets, oldtypes, newtype);
+free(blocklengths);
+free(oldtypes);
+free(offsets);
+return retval;
+}
+
 /*******************************************************/
 /*  MPI_Type_contiguous.  Create count copies of a type.
  *  this creates arrays of the singleton arguments and use them to call
@@ -458,27 +480,6 @@ int MPI_Type_contiguous(int count, MPI_Datatype old, MPI_Datatype * new)
 
 /*******************************************************/
 
-int Type_hvector(int count, int blocklen, MPI_Aint stride,
-                 Datatype oldtype, Datatype *newtype)
-{
-    int *blocklengths = (int*)malloc(sizeof(int) *count);
-    Datatype *oldtypes = (Datatype*)malloc(sizeof(Datatype) *count);
-    MPI_Aint *offsets = (MPI_Aint*)malloc(sizeof(MPI_Aint) *count);
-    MPI_Aint extent;
-
-    Type_extent(oldtype, &extent);
-    for (int i = 0; i < count; i++)
-    {
-        blocklengths[i] = blocklen;
-        offsets[i] = stride * i;
-        oldtypes[i] = oldtype;
-    }
-    int retval = Type_struct(count, blocklengths, offsets, oldtypes, newtype);
-    free(blocklengths);
-    free(oldtypes);
-    free(offsets);
-    return retval;
-}
 
 int FC_FUNC( mpi_type_hvector, MPI_TYPE_HVECTOR )
          (int * count,   long * blocklen, long * stride,
