@@ -9,16 +9,16 @@ extern "C" {
 
 #define MPI_MAX_LIBRARY_VERSION_STRING (80)
 
-typedef int V_MPIEXPORT MPI_Comm;
-typedef int V_MPIEXPORT MPI_Request;
-typedef int V_MPIEXPORT MPI_Message;
+typedef int V_MPIEXPORT_WIN MPI_Comm;
+typedef int V_MPIEXPORT_WIN MPI_Request;
+typedef int V_MPIEXPORT_WIN MPI_Message;
 
 
 #define MPI_COMM_WORLD (1)
 #define MPI_COMM_NULL (0)      /* handle 0 maps to NULL */
 
 
-typedef int V_MPIEXPORT MPI_Group;
+typedef int V_MPIEXPORT_WIN MPI_Group;
 
 /* MPI_GROUP_EMPTY and MPI_GROUP_NULL must not conflict with MPI_GROUP_ONE */
 #define MPI_GROUP_EMPTY (-1)
@@ -74,10 +74,10 @@ typedef int V_MPIEXPORT MPI_Group;
  * Data types etc.
  */
 
-typedef intptr_t V_MPIEXPORT MPI_Aint;
+typedef intptr_t V_MPIEXPORT_WIN MPI_Aint;
 #define MPI_BOTTOM (0)
 #define MPI_IN_PLACE (void *)(-1)
-typedef int V_MPIEXPORT MPI_Datatype;
+typedef int V_MPIEXPORT_WIN MPI_Datatype;
 
 /*
  * Topology
@@ -172,7 +172,7 @@ typedef int V_MPIEXPORT MPI_Datatype;
  *
  */
 
-typedef int V_MPIEXPORT MPI_Fint;
+typedef int V_MPIEXPORT_WIN MPI_Fint;
 
 
 
@@ -204,7 +204,7 @@ typedef int V_MPIEXPORT MPI_Fint;
  *
  */
 
-typedef int V_MPIEXPORT MPI_Status_int;
+typedef int V_MPIEXPORT_WIN MPI_Status_int;
 
 typedef struct                  /* Fortran: INTEGER status(MPI_STATUS_SIZE) */
 {
@@ -223,7 +223,7 @@ typedef struct                  /* Fortran: INTEGER status(MPI_STATUS_SIZE) */
 /*
  * MPI Errhandling stubs (Not functional currently)
  */
-typedef int V_MPIEXPORT MPI_Errhandler;
+typedef int V_MPIEXPORT_WIN MPI_Errhandler;
 
 #define MPI_ERRORS_ARE_FATAL ((MPI_Errhandler)0)
 #define MPI_ERRORS_RETURN    ((MPI_Errhandler)-1)
@@ -234,7 +234,7 @@ typedef int V_MPIEXPORT MPI_Errhandler;
  */
 
 
-typedef int V_MPIEXPORT MPI_Op;
+typedef int V_MPIEXPORT_WIN MPI_Op;
 
 typedef void MPI_User_function( void *invec, void *inoutvec, int *len,
                                 MPI_Datatype *datatype);
@@ -260,13 +260,13 @@ typedef void MPI_User_function( void *invec, void *inoutvec, int *len,
 
 
 /* NOTE: the C type MPI_Offset is NOT the same as MPI datatype MPI_OFFSET */
-typedef long long int V_MPIEXPORT MPI_Offset;
+typedef long long int V_MPIEXPORT_WIN MPI_Offset;
 
 
 /* info
  */
 
-typedef int V_MPIEXPORT MPI_Info;         /* handle */
+typedef int V_MPIEXPORT_WIN MPI_Info;         /* handle */
 
 #define MPI_INFO_NULL (0)
 
@@ -528,7 +528,7 @@ extern int V_MPIEXPORT MPI_Mrecv(void *buf, int count, MPI_Datatype type, MPI_Me
 #define MPI_ORDER_C 89
 #define MPI_ORDER_FORTRAN 90
 
-typedef int V_MPIEXPORT MPI_Win;
+typedef int V_MPIEXPORT_WIN MPI_Win;
 #define MPI_WIN_NULL 0
 
 #define MPI_MODE_NOCHECK 99
@@ -562,7 +562,7 @@ extern int V_MPIEXPORT MPI_Fetch_and_op(const void *origin_addr, void *result_ad
         MPI_Datatype datatype, int target_rank, MPI_Aint target_disp,
         MPI_Op op, MPI_Win win);
 
-typedef int V_MPIEXPORT MPI_File;
+typedef int V_MPIEXPORT_WIN MPI_File;
 #define MPI_FILE_NULL 0
 
 #define MPI_MODE_RDONLY 100
@@ -613,7 +613,7 @@ extern int V_MPIEXPORT MPI_File_set_view(MPI_File fh, MPI_Offset disp,
 /*
  * Additional interfaces needed for compiling E3SM with gcc-14
  */
-extern int MPI_Get_Version(int *version, int *subversion);
+extern int MPI_Get_version(int *version, int *subversion);
 extern int MPI_Info_free(MPI_Info *info);
 
 #endif

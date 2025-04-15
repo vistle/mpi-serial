@@ -363,7 +363,7 @@ void FC_FUNC( mpi_get_library_version, MPI_GET_LIBRARY_VERSION) (char *version, 
 
 
 
-int MPI_Get_Version(int *version, int *subversion)
+int MPI_Get_version(int *version, int *subversion)
 {
     *version = 1;
     *subversion = 0;

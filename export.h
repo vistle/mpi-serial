@@ -19,4 +19,10 @@
 #define V_MPIEXPORT V_IMPORT
 #endif
 
+#ifdef _WIN32
+#define V_MPIEXPORT_WIN V_MPIEXPORT
+#else
+#define V_MPIEXPORT_WIN
+#endif
+
 #endif // _EXPORT_H
