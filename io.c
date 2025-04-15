@@ -2,7 +2,9 @@
 
 #include <errno.h>
 #include <fcntl.h>
+#ifndef _WIN32
 #include <unistd.h>
+#endif 
 
 static int mode(int amode) {
     return amode;

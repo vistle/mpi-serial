@@ -1,7 +1,9 @@
 #include "mpiP.h"
 #include "mpi.h"
 #include "type.h"
-
+#ifdef _WIN32
+#include <WinSock2.h>
+#endif
 /****************************************************************************/
 
 static int initialized=0;

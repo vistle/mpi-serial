@@ -51,7 +51,7 @@ int Pack(void *inbuf, int incount, Datatype type,
         printf("MPI_Pack: data exceeds buffer size\n");
         exit(1);
       }
-      memcpy(((char*) outbuf)+(*position), inbuf+type->pairs[j].disp + (extent*i),
+      memcpy(((char*) outbuf)+(*position), (char*)inbuf+type->pairs[j].disp + (extent*i),
              Simpletype_length(type->pairs[j].type));
       *position += Simpletype_length(type->pairs[j].type);
     }
@@ -156,7 +156,7 @@ int Unpack(void * inbuf, int insize, int * position, void *outbuf,
         printf("MPI_Unpack: Data exceeds buffer size\n");
 	exit(1);
       }
-      memcpy(outbuf+type->pairs[j].disp + (extent*i), ((char*) inbuf)+(*position) ,
+      memcpy((char*)outbuf+type->pairs[j].disp + (extent*i), ((char*) inbuf)+(*position) ,
              Simpletype_length(type->pairs[j].type));
       *position += Simpletype_length(type->pairs[j].type);
     }

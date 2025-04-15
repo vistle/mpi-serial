@@ -403,19 +403,25 @@ int FC_FUNC( mpi_type_struct, MPI_TYPE_STRUCT )
 int MPI_Type_struct(int count, int * blocklens, MPI_Aint * displacements,
                     MPI_Datatype *oldtypes,     MPI_Datatype *newtype)
 {
-    int i;
-    Datatype oldtypes_ptr[count];
+    Datatype* oldtypes_ptr = (Datatype*)malloc(sizeof(Datatype)* count);
+    if(!oldtypes_ptr)
+    {
+      fprintf(stderr, "MPI_Type_struct: malloc failed\n");
+      return MPI_ERR_NO_MEM;
+    }
     Datatype * newtype_ptr;
-
-    for (i = 0; i < count; i++)
+  
+    for (int i = 0; i < count; i++)
     {
         oldtypes_ptr[i] = *(Datatype*) mpi_handle_to_datatype(oldtypes[i]);
     }
 
     mpi_alloc_handle(newtype, (void**) &newtype_ptr);
 
-    return Type_struct(count, blocklens, displacements,
+    int retval = Type_struct(count, blocklens, displacements,
                        oldtypes_ptr, newtype_ptr);
+    free(oldtypes_ptr);
+    return retval;
 }
 
 /*******************************************************/
@@ -426,22 +432,11 @@ int MPI_Type_struct(int count, int * blocklens, MPI_Aint * displacements,
 
 int Type_contiguous(int count, Datatype oldtype, Datatype *newtype)
 {
-    int i;
-    int blocklengths[count];
-    Datatype oldtypes[count];
-    MPI_Aint offsets[count];
-    MPI_Aint extent;
-
-    //each copy is strided by the extent of the datatype.
-    // Calculate that here.
-    Type_extent(oldtype, &extent);
-    for (i = 0; i < count; i++)
-    {
-        blocklengths[i] = 1;
-        offsets[i] = extent * i;
-        oldtypes[i] = oldtype;
-    }
-    return Type_struct(count, blocklengths, offsets, oldtypes, newtype);
+  MPI_Aint extent;
+  //each copy is strided by the extent of the datatype.
+  // Calculate that here.
+  Type_extent(oldtype, &extent);
+  return Type_hvector(count, 1, extent, oldtype, newtype);  
 }
 
 int FC_FUNC( mpi_type_contiguous, MPI_TYPE_CONTIGUOUS )
@@ -466,21 +461,23 @@ int MPI_Type_contiguous(int count, MPI_Datatype old, MPI_Datatype * new)
 int Type_hvector(int count, int blocklen, MPI_Aint stride,
                  Datatype oldtype, Datatype *newtype)
 {
-    int i;
-    int blocklengths[count];
-    Datatype oldtypes[count];
-    MPI_Aint offsets[count];
+    int *blocklengths = (int*)malloc(sizeof(int) *count);
+    Datatype *oldtypes = (Datatype*)malloc(sizeof(Datatype) *count);
+    MPI_Aint *offsets = (MPI_Aint*)malloc(sizeof(MPI_Aint) *count);
     MPI_Aint extent;
 
     Type_extent(oldtype, &extent);
-    for (i = 0; i < count; i++)
+    for (int i = 0; i < count; i++)
     {
         blocklengths[i] = blocklen;
         offsets[i] = stride * i;
         oldtypes[i] = oldtype;
     }
-
-    return Type_struct(count, blocklengths, offsets, oldtypes, newtype);
+    int retval = Type_struct(count, blocklengths, offsets, oldtypes, newtype);
+    free(blocklengths);
+    free(oldtypes);
+    free(offsets);
+    return retval;
 }
 
 int FC_FUNC( mpi_type_hvector, MPI_TYPE_HVECTOR )
@@ -579,14 +576,15 @@ int Type_hindexed(int count, int *blocklens, MPI_Aint *displacements,
                   Datatype oldtype, Datatype *newtype)
 {
     int i;
-    Datatype oldtypes[count];
-
-    for (i = 0; i < count; i++)
+    Datatype *oldtypes = (Datatype*)malloc(sizeof(Datatype) * count);
+    for (int i = 0; i < count; i++)
     {
         oldtypes[i] = oldtype;
     }
 
-    return Type_struct(count, blocklens, displacements, oldtypes, newtype);
+    int retval = Type_struct(count, blocklens, displacements, oldtypes, newtype);
+    free(oldtypes);
+    return retval;
 }
 
 int FC_FUNC( mpi_type_hindexed, MPI_TYPE_HINDEXED )
@@ -614,17 +612,18 @@ int MPI_Type_hindexed(int count, int *blocklens, MPI_Aint * disps,
 int Type_indexed(int count, int *blocklens, int *displacements,
                  Datatype oldtype, Datatype *newtype)
 {
-    int i;
     MPI_Aint extent;
-    MPI_Aint bdisps[count];
+    MPI_Aint *bdisps = (MPI_Aint*)malloc(sizeof(MPI_Aint) * count);
 
-    for (i = 0; i < count; i++)
+    for (int i = 0; i < count; i++)
     {
         Type_extent(oldtype, &extent);
         bdisps[i] = displacements[i] * extent;
     }
 
-    return Type_hindexed(count, blocklens, bdisps, oldtype, newtype);
+    int retval = Type_hindexed(count, blocklens, bdisps, oldtype, newtype);
+    free(bdisps);
+    return retval;
 }
 
 int FC_FUNC( mpi_type_indexed, MPI_TYPE_INDEXED )
@@ -651,13 +650,13 @@ int MPI_Type_indexed(int count, int *blocklens, int *displacements,
 int Type_create_indexed_block(int count, int blocklen, int *displacements,
 			      Datatype oldtype, Datatype *newtype)
 {
-    int i;
-    int blocklens[count];
-
-    for (i = 0; i < count; i++)
+    int *blocklens = (int*)malloc(sizeof(int) * count);
+    for (int i = 0; i < count; i++)
         blocklens[i] = blocklen;
 
-    return Type_indexed(count, blocklens, displacements, oldtype, newtype);
+    int retval = Type_indexed(count, blocklens, displacements, oldtype, newtype);
+    free(blocklens);
+    return retval;
 }
 
 int FC_FUNC( mpi_type_create_indexed_block, MPI_TYPE_CREATE_INDEXED_BLOCK )

@@ -11,3 +11,8 @@
  {
    return(MPI_SUCCESS);
  }
+
+ int MPI_Error_class(int errorcode, int *errorclass)
+ {
+   return(MPI_SUCCESS);
+ }
