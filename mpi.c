@@ -17,7 +17,7 @@ static int *f_MPI_STATUS_IGNORE;
 static int *f_MPI_STATUSES_IGNORE;
 static int *f_MPI_IN_PLACE;
 
-static char *mpi_version_string="mpi-serial 2.5.0";
+static char *mpi_version_string="mpi-serial 2.5.4 for Vistle";
 
 
 /****************************************************************************/
