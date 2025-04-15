@@ -290,14 +290,14 @@ extern int MPI_Intercomm_create(MPI_Comm local_comm, int local_leader,
                           MPI_Comm peer_comm, int remote_leader,
                           int tag, MPI_Comm *newintercomm);
 extern int MPI_Intercomm_merge(MPI_Comm intercomm, int high,
-			       MPI_Comm *newintercomm);
-extern int MPI_Cart_create(MPI_Comm comm_old, int ndims, int *dims,
-                        int *periods, int reorder, MPI_Comm *comm_cart);
-extern int MPI_Cart_get(MPI_Comm comm, int maxdims, int *dims,
-                        int *periods, int *coords);
+                               MPI_Comm *newintracomm);
+extern int MPI_Cart_create(MPI_Comm comm_old, int ndims, const int dims[],
+                        const int periods[], int reorder, MPI_Comm *comm_cart);
+extern int MPI_Cart_get(MPI_Comm comm, int maxdims, int dims[],
+                        int periods[], int coords[]);
 extern int MPI_Cart_coords(MPI_Comm comm, int rank, int maxdims,
-                        int *coords);
-extern int MPI_Dims_create(int nnodes, int ndims, int *dims);
+                        int coords[]);
+extern int MPI_Dims_create(int nnodes, int ndims, int dims[]);
 
 extern int MPI_Graph_create(MPI_Comm comm_old, int nnodes, const int index[],
     const int edges[], int reorder, MPI_Comm *comm_graph);
@@ -312,43 +312,40 @@ extern int MPI_Gather(const void* sendbuf, int sendcount, MPI_Datatype sendtype,
                       void* recvbuf, int recvcount, MPI_Datatype recvtype,
                       int root, MPI_Comm comm);
 extern int MPI_Gatherv(const void* sendbuf, int sendcount, MPI_Datatype sendtype,
-                       void* recvbuf, const int *recvcounts, const int *displs,
+                       void* recvbuf, const int recvcounts[], const int displs[],
                        MPI_Datatype recvtype, int root, MPI_Comm comm);
 extern int MPI_Allgather(const void* sendbuf, int sendcount, MPI_Datatype sendtype,
                          void* recvbuf, int recvcount, MPI_Datatype recvtype,
                          MPI_Comm comm);
 extern int MPI_Allgatherv(const void* sendbuf, int sendcount, MPI_Datatype sendtype,
-                          void* recvbuf, const int *recvcounts, const int *displs,
+                          void* recvbuf, const int recvcounts[], const int displs[],
                           MPI_Datatype recvtype, MPI_Comm comm);
 extern int MPI_Scatter(const void* sendbuf, int sendcount, MPI_Datatype sendtype,
                         void* recvbuf, int recvcount, MPI_Datatype recvtype,
                         int root, MPI_Comm comm);
-extern int MPI_Scatterv(const void* sendbuf, int *sendcounts, int *displs,
+extern int MPI_Scatterv(const void* sendbuf, const int sendcounts[], const int displs[],
                         MPI_Datatype sendtype, void* recvbuf, int recvcount,
                         MPI_Datatype recvtype, int root, MPI_Comm comm);
 extern int MPI_Reduce(const void* sendbuf, void* recvbuf, int count,
                       MPI_Datatype datatype, MPI_Op op, int root, MPI_Comm comm);
-extern int MPI_Reduce_scatter(const void* sendbuf, void* recvbuf, int *recvcounts,
+extern int MPI_Reduce_scatter(const void* sendbuf, void* recvbuf, const int recvcounts[],
                          MPI_Datatype datatype, MPI_Op op, MPI_Comm comm);
 extern int MPI_Allreduce(const void* sendbuf, void* recvbuf, int count,
                          MPI_Datatype datatype, MPI_Op op, MPI_Comm comm);
-extern int MPI_Iallreduce(const void *sendbuf, void *recvbuf, int count,
-                   MPI_Datatype datatype, MPI_Op op, MPI_Comm comm,
-                   MPI_Request *request);
 extern int MPI_Scan(const void* sendbuf, void* recvbuf, int count,
                     MPI_Datatype datatype, MPI_Op op, MPI_Comm comm);
 extern int MPI_Alltoall(const void *sendbuf, int sendcount, MPI_Datatype sendtype,
                         void *recvbuf, int recvcount, MPI_Datatype recvtype,
                         MPI_Comm comm);
-extern int MPI_Alltoallv(const void *sendbuf, int *sendcounts,
-                         int *sdispls, MPI_Datatype sendtype,
-                         void *recvbuf, int *recvcounts,
-                         int *rdispls, MPI_Datatype recvtype,
+extern int MPI_Alltoallv(const void *sendbuf, const int sendcounts[],
+                         const int sdispls[], MPI_Datatype sendtype,
+                         void *recvbuf, const int recvcounts[],
+                         const int rdispls[], MPI_Datatype recvtype,
                          MPI_Comm comm) ;
-extern int MPI_Alltoallw(const void *sendbuf, int *sendcounts,
-                         int *sdispls, MPI_Datatype *sendtypes,
-                         void *recvbuf, int *recvcounts,
-                         int *rdispls, MPI_Datatype *recvtypes,
+extern int MPI_Alltoallw(const void *sendbuf, const int sendcounts[],
+                         const int sdispls[], const MPI_Datatype sendtypes[],
+                         void *recvbuf, const int recvcounts[],
+                         const int rdispls[], const MPI_Datatype recvtypes[],
                          MPI_Comm comm) ;
 
 
@@ -375,8 +372,8 @@ extern int MPI_Attr_get(MPI_Comm comm, int keyval,void *attribute_val, int *flag
 extern MPI_Comm MPI_Comm_f2c(MPI_Fint comm);
 extern MPI_Fint MPI_Comm_c2f(MPI_Comm comm);
 
-extern int MPI_Group_incl(MPI_Group group, int n, int *ranks, MPI_Group *newgroup);
 extern int MPI_Group_excl(MPI_Group group, int n, const int ranks[], MPI_Group *newgroup);
+extern int MPI_Group_incl(MPI_Group group, int n, const int ranks[], MPI_Group *newgroup);
 extern int MPI_Group_range_incl(MPI_Group group, int n, int ranges[][3],
                          MPI_Group *newgroup);
 extern int MPI_Group_union(MPI_Group group1, MPI_Group group2, MPI_Group *newgroup);
@@ -385,7 +382,7 @@ extern int MPI_Group_intersection(MPI_Group group1, MPI_Group group2,
 extern int MPI_Group_difference(MPI_Group group1, MPI_Group group2,
                          MPI_Group *newgroup);
 extern int MPI_Group_free(MPI_Group *group);
-extern int MPI_Group_translate_ranks(MPI_Group group1, int n, int *ranks1,
+extern int MPI_Group_translate_ranks(MPI_Group group1, int n, const int ranks1[],
                                      MPI_Group group2, int *ranks2);
 extern int MPI_Group_compare(MPI_Comm group1, MPI_Comm group2, int *result);
 extern int MPI_Group_rank(MPI_Group group, int *rank);
@@ -393,7 +390,7 @@ extern int MPI_Group_size(MPI_Group group, int *size);
 extern MPI_Group MPI_Group_f2c(MPI_Fint group);
 extern MPI_Fint MPI_Group_c2f(MPI_Group group);
 
-extern int MPI_Init(int *argc, char **argv[]) ;
+extern int MPI_Init(int *argc, char ***argv) ;
 extern int MPI_Init_thread( int *argc, char **argv[], int required, int *provided );
 extern int MPI_Query_thread(int *provided);
 extern int MPI_Finalize(void);
@@ -403,15 +400,15 @@ extern int MPI_Error_string(int errorcode, char *string, int *resultlen);
 extern int MPI_Get_processor_name(char *name, int *resultlen);
 extern int MPI_Get_version(int *mpi_vers, int *mpi_subvers);
 extern int MPI_Get_library_version(char *version, int *resultlen);
-extern int MPI_Initialized(int *flag);
 extern int MPI_Is_thread_main(int *flag);
 
 extern int MPI_Info_create(MPI_Info *info);
-extern int MPI_Info_set(MPI_Info info, char *key, char *value);
+extern int MPI_Info_set(MPI_Info info, const char *key, const char *value);
 
-extern int MPI_Pack( void *inbuf, int incount, MPI_Datatype datatype,
+extern int MPI_Initialized(int *flag);
+extern int MPI_Pack(const void *inbuf, int incount, MPI_Datatype datatype,
                      void *outbuf, int outsize, int *position, MPI_Comm comm);
-extern int MPI_Unpack( void *inbuf, int insize, int *position,
+extern int MPI_Unpack(const void *inbuf, int insize, int *position,
                        void *outbuf, int outcount, MPI_Datatype datatype,
                        MPI_Comm comm );
 extern int MPI_Irecv(void *buf, int count, MPI_Datatype datatype,
@@ -421,21 +418,21 @@ extern int MPI_Recv(void *buf, int count, MPI_Datatype datatype, int source,
 
 extern int MPI_Test(MPI_Request *request, int *flag, MPI_Status *status);
 extern int MPI_Wait(MPI_Request *request, MPI_Status *status);
-extern int MPI_Testany(int count,  MPI_Request *array_of_requests,
+extern int MPI_Testany(int count,  MPI_Request array_of_requests[],
                        int *index, int *flag, MPI_Status *status);
-extern int MPI_Waitany(int count, MPI_Request *array_of_requests,
+extern int MPI_Waitany(int count, MPI_Request array_of_requests[],
                        int *index, MPI_Status *status);
-extern int MPI_Testall(int count, MPI_Request *array_of_requests,
+extern int MPI_Testall(int count, MPI_Request array_of_requests[],
                        int *flag, MPI_Status *array_of_statuses);
-extern int MPI_Waitall(int count, MPI_Request *array_of_requests,
+extern int MPI_Waitall(int count, MPI_Request array_of_requests[],
                        MPI_Status *array_of_statuses);
 extern MPI_Request MPI_Request_f2c(MPI_Fint request);
 extern MPI_Fint MPI_Request_c2f(MPI_Request request);
-extern int MPI_Testsome(int incount, MPI_Request *array_of_requests,
-                        int *outcount, int *array_of_indices,
+extern int MPI_Testsome(int incount, MPI_Request array_of_requests[],
+                        int *outcount, int array_of_indices[],
                         MPI_Status *array_of_statuses);
-extern int MPI_Waitsome(int incount, MPI_Request *array_of_requests,
-                        int *outcount, int *array_of_indices,
+extern int MPI_Waitsome(int incount, MPI_Request array_of_requests[],
+                        int *outcount, int array_of_indices[],
                         MPI_Status *array_of_statuses);
 extern int MPI_Request_free(MPI_Request * req);
 extern int MPI_Cancel(MPI_Request * req);
@@ -475,36 +472,36 @@ extern int MPI_Get_count(const MPI_Status *status, MPI_Datatype datatype, int *c
 extern int MPI_Get_elements(const MPI_Status *status, MPI_Datatype datatype, int *count);
 extern int MPI_Type_contiguous(int count, MPI_Datatype oldtype, MPI_Datatype *newtype);
 
-extern int MPI_Type_vector(int count, int blocklen, int stride, MPI_Datatype oldtype,
+extern int MPI_Type_vector(int count, int blocklength, int stride, MPI_Datatype oldtype,
                            MPI_Datatype *newtype);
 
-extern int MPI_Type_hvector(int count, int blocklen, MPI_Aint stride,
+extern int MPI_Type_hvector(int count, int blocklength, MPI_Aint stride,
                             MPI_Datatype oldtype, MPI_Datatype *newtype);
 
-extern int MPI_Type_create_hvector(int count, int blocklen, MPI_Aint stride,
+extern int MPI_Type_create_hvector(int count, int blocklength, MPI_Aint stride,
                             MPI_Datatype oldtype, MPI_Datatype *newtype);
 
-extern int MPI_Type_indexed(int count, int *blocklens, int *displacements,
+extern int MPI_Type_indexed(int count, const int array_of_blocklengths[], const int array_of_displacements[],
                             MPI_Datatype oldtype, MPI_Datatype *newtype);
 
 extern int MPI_Type_create_subarray(int ndims, const int array_of_sizes[], const
 int array_of_subsizes[], const int array_of_starts[], int order, MPI_Datatype
 oldtype, MPI_Datatype *newtype);
 
-extern int MPI_Type_create_indexed_block(int count, int blocklen, int *displacements,
+extern int MPI_Type_create_indexed_block(int count, int blocklength, const int array_of_displacements[],
                                   MPI_Datatype oldtype, MPI_Datatype *newtype);
-extern int MPI_Type_hindexed(int count, int *blocklens, MPI_Aint *displacements,
+extern int MPI_Type_hindexed(int count, int array_of_blocklengths[], MPI_Aint array_of_displacements[],
                              MPI_Datatype oldtype, MPI_Datatype *newtype);
 extern int MPI_Type_size(MPI_Datatype type, int * size);
-extern int MPI_Type_struct(int count, int *blocklens, MPI_Aint *displacements,
-                           MPI_Datatype *oldtypes, MPI_Datatype *newtype);
+extern int MPI_Type_struct(int count, int array_of_blocklengths[], MPI_Aint array_of_displacements[],
+                           MPI_Datatype array_of_types[], MPI_Datatype *newtype);
 extern int MPI_Type_dup(MPI_Datatype oldtype, MPI_Datatype *newtype);
 
 extern int MPI_Type_extent(MPI_Datatype datatype, MPI_Aint * extent);
 extern int MPI_Type_commit(MPI_Datatype * datatype);
 extern int MPI_Type_free(MPI_Datatype * datatype);
-extern int MPI_Type_lb(MPI_Datatype datatype, MPI_Aint * lb);
-extern int MPI_Type_ub(MPI_Datatype datatype, MPI_Aint * ub);
+extern int MPI_Type_lb(MPI_Datatype datatype, MPI_Aint *displacement);
+extern int MPI_Type_ub(MPI_Datatype datatype, MPI_Aint *displacement);
 extern int MPI_Type_create_struct(int count, int array_of_blocklengths[],
      const MPI_Aint array_of_displacements[], const MPI_Datatype array_of_types[],
      MPI_Datatype *newtype);
@@ -605,5 +602,13 @@ extern int MPI_File_set_view(MPI_File fh, MPI_Offset disp,
 #ifdef __cplusplus
 }
 #endif
+
+
+
+/*
+ * Additional interfaces needed for compiling E3SM with gcc-14
+ */
+extern int MPI_Get_Version(int *version, int *subversion);
+extern int MPI_Info_free(MPI_Info *info);
 
 #endif
