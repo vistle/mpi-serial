@@ -118,7 +118,7 @@ int FC_FUNC( mpi_init_fort , MPI_INIT_FORT)
     if ( offset != (*f_##name-1)*sizeof(int) ) \
     { fprintf(stderr,"mpi-serial: mpi_init_fort: mpif.h %s (%d) (%d bytes) " \
                      "is inconsistent w/offset in MPI_Status (%d bytes)\n", \
-                    #name,*f_##name,(*f_##name-1)*sizeof(int),offset); \
+                    #name,*f_##name,(*f_##name-1)*(int)sizeof(int),offset); \
       err=1; }}
 
 

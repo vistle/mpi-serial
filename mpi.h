@@ -256,7 +256,7 @@ typedef void MPI_User_function( void *invec, void *inoutvec, int *len,
 
 
 
-#define MPI_STATUS_SIZE       (sizeof(MPI_Status) / sizeof(int))
+#define MPI_STATUS_SIZE       (int)(sizeof(MPI_Status) / sizeof(int))
 
 
 /* NOTE: the C type MPI_Offset is NOT the same as MPI datatype MPI_OFFSET */

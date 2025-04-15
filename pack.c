@@ -70,12 +70,12 @@ int Pack_size(int incount, Datatype datatype,
         *size += Simpletype_length(datatype->pairs[i].type);
     }
     *size *= incount;
-    printf("Size = %d\n", *size);
+    printf("Size = %ld\n", (long)*size);
   return MPI_SUCCESS;
 }
 
 int FC_FUNC( mpi_pack_size, MPI_PACK_SIZE )(int * incount, int * datatype,
-                                          int * comm, MPI_Aint * size, int *ierr)
+                                          int * comm, int * size, int *ierr)
 {
   *ierr = MPI_Pack_size(*incount, *datatype, *comm, size);
   return MPI_SUCCESS;

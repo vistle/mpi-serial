@@ -372,7 +372,7 @@ void AP_list_print(char *str, pList list)
   cur=list->head;
   while(cur)
     {
-      printf("%d ",(long int)cur->data);
+      printf("%ld ",(long int)cur->data);
       cur=cur->next;
     }
 
@@ -399,7 +399,7 @@ void AP_list_revprint(char *str, pList list)
   cur=list->tail;
   while(cur)
     {
-      printf("%d ",(long int)cur->data);
+      printf("%ld ",(long int)cur->data);
       cur=cur->prev;
     }
 

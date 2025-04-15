@@ -149,7 +149,7 @@ int MPI_Ssend(const void* buf, int count, MPI_Datatype datatype,
 int MPI_Issend(const void *buf, int count, MPI_Datatype datatype, int dest,
                int tag, MPI_Comm comm, MPI_Request *request)
 {
-  return MPI_Isend(buf,count,datatype,dest,tag,comm,&request);
+  return MPI_Isend(buf,count,datatype,dest,tag,comm,request);
 }
 
 /*********/
