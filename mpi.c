@@ -178,7 +178,7 @@ int MPI_Is_thread_main(int *flag)
 }
 
 
-int MPI_Init(int *argc, char **argv[])
+int MPI_Init(int *argc, char ***argv)
 {
     fprintf(stderr, "mpi-serial: MPI_Init\n");
   MPI_Comm my_comm_world;
@@ -363,10 +363,10 @@ void FC_FUNC( mpi_get_library_version, MPI_GET_LIBRARY_VERSION) (char *version, 
 
 
 
-int MPI_Get_version(int *mpi_vers, int *mpi_subvers)
+int MPI_Get_Version(int *version, int *subversion)
 {
-    *mpi_vers = 1;
-    *mpi_subvers = 0;
+    *version = 1;
+    *subversion = 0;
 
     return (MPI_SUCCESS);
 }
