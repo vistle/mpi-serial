@@ -827,7 +827,7 @@ void test_packed_complex()
   struct {int a; char b; char c; long d; } s1;
   struct {int a; char b; char c; long d; } s2;
 
-  MPI_Aint size;
+  int size;
   int pos = 0;
   int x = 10, y;
   float f = 0.345, g;
