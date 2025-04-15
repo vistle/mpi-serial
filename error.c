@@ -14,5 +14,6 @@
 
  int MPI_Error_class(int errorcode, int *errorclass)
  {
+   *errorclass = errorcode; // similar to OpenMPI
    return(MPI_SUCCESS);
  }
