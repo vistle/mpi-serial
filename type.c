@@ -576,7 +576,6 @@ int MPI_Type_vector(int count, int blocklength, int stride,
 int Type_hindexed(int count, const int *blocklens, const MPI_Aint *displacements,
                   Datatype oldtype, Datatype *newtype)
 {
-    int i;
     Datatype *oldtypes = (Datatype*)malloc(sizeof(Datatype) * count);
     for (int i = 0; i < count; i++)
     {
