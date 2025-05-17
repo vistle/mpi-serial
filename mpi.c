@@ -1,6 +1,7 @@
 #include "mpiP.h"
 #include "mpi.h"
 #include "type.h"
+#include <limits.h>
 #ifdef _WIN32
 #include <WinSock2.h>
 #endif
@@ -436,5 +437,18 @@ int MPI_Free_mem(void *base)
 int MPI_Attr_get(MPI_Comm comm, int keyval,void *attribute_val,
     int *flag )
 {
+    /* MPI_TAG_UB, MPI_HOST, MPI_IO, MPI_WTIME_IS_GLOBAL, MPI_UNIVERSE_SIZE, MPI_LASTUSEDCODE, and MPI_APPNUM are predefined and should be handled */
+    switch (keyval) {
+    case MPI_TAG_UB:
+        if (attribute_val) {
+          static int tag_ub = MPI_TAG_UB;
+          *(int **)attribute_val = &tag_ub;
+        }
+        if (flag) {
+          *flag = 1;
+        }
+        return MPI_SUCCESS;
+        break;
+    }
     return MPI_ERR_OTHER;
 }
